@@ -1,0 +1,14 @@
+{
+  "version": "2.0",
+  "app_name": "business_card_db_app",
+  "stages": {
+    "dev": {
+      "api_gateway_stage": "api",
+      "autogen_policy": false,
+      "environment_variables": {
+        "USERS_TABLE_NAME": "users-app",
+        "CARD_TABLE_NAME": "cards-app"
+      }
+    }
+  }
+}
