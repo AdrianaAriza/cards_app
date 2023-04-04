@@ -1,7 +1,7 @@
 import boto3
 import os
 from chalicelib import db_card, auth
-
+import json
 import hashlib
 
 _USER_DB = None
@@ -18,12 +18,10 @@ def get_app_db():
     return _APP_DB
 
 
-def get_users_db():
-    global _USER_DB
-    if _USER_DB is None:
-        _USER_DB = boto3.resource('dynamodb').Table(
-            os.environ['USERS_TABLE_NAME'])
-    return _USER_DB
+def get_table_name():
+    with open(os.path.join('.chalice', 'config.json')) as f:
+        data = json.load(f)
+    return data['stages']['dev']['environment_variables']['USERS_TABLE_NAME']
 
 
 def get_authorized_username(current_request):

@@ -1,6 +1,6 @@
 from chalice import Chalice
 from chalicelib import auth, db_users
-from chalicelib.utils import get_users_db, get_app_db, get_authorized_username
+from chalicelib.utils import get_table_name, get_app_db, get_authorized_username
 from chalicelib.auth import jwt_auth
 
 app = Chalice(app_name='business_card_db_app')
@@ -14,8 +14,7 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     body = app.current_request.json_body
-    print(body)
-    record = get_users_db().get_item(
+    record = get_table_name().get_item(
         Key={'email': body['email']})['Item']
     jwt_token = auth.get_jwt_token(
         body['email'], body['password'], record)
