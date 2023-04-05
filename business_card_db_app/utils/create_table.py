@@ -14,8 +14,7 @@ TABLES = {
     'users': {
         'prefix': 'users-app',
         'env_var': 'USERS_TABLE_NAME',
-        'hash_key': 'email',
-        'pk': 'email'
+        'hash_key': 'email'
     }
 }
 
