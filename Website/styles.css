@@ -1,0 +1,50 @@
+body {
+    background-color: azure;
+}
+
+button {
+    border: none;
+}
+
+.mb-100 {
+    padding-bottom: 100%;
+}
+
+.img-upload {
+    padding-top: 3.3em;
+}
+
+.img-search {
+    height: 3.3rem;
+    width: 15rem;
+    margin-left: auto;
+}
+
+.img-save {
+    height: 2.5rem;
+    width: 8rem;
+    margin-left: auto;
+}
+
+.form-left {
+    font-family: 'Times New Roman', Times, serif;
+    border: 1px solid lightslategray;
+    color: darkslategray;
+    margin-left: 50%;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.form-right {
+    font-family: 'Times New Roman', Times, serif;
+    border: 1px solid lightslategray;
+    color: darkslategray;
+    margin-right: 50%;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.row-margin {
+    margin: 0;
+    padding: 0;
+}

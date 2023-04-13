@@ -2,9 +2,18 @@ from chalice import Chalice
 from chalicelib import auth, db_users
 from chalicelib.utils import get_table_name, get_app_db, get_authorized_username
 from chalicelib.auth import jwt_auth
+from chalicelib import storage_service
+from chalicelib import recognition_service
+from chalicelib import m_comprehend_service
 import boto3
+import json
+import base64
 
 app = Chalice(app_name='business_card_db_app')
+storage_location = 'cards-db-bucket'
+storage_service = storage_service.StorageService(storage_location)
+recognition_service = recognition_service.RecognitionService(storage_service)
+m_comprehend_service = m_comprehend_service.McomprehendService()
 
 
 @app.route('/')
@@ -74,3 +83,32 @@ def update_card(card_id):
         body.get('company_website'),
         body.get('company_address')
     )
+
+
+@app.route('/images', methods = ['POST'], cors = True)
+def upload_image():
+    """processes file upload and saves file to storage service"""
+    request_data = json.loads(app.current_request.raw_body)
+    file_name = request_data['filename']
+    file_bytes = base64.b64decode(request_data['filebytes'])
+
+    image_info = storage_service.upload_file(file_bytes, file_name)
+
+    return image_info
+
+
+@app.route('/images/{image_id}/translate-text', methods = ['POST'], cors = True)
+def translate_image_text(image_id):
+    """detects then translates text in the specified image"""
+    request_data = json.loads(app.current_request.raw_body)
+
+    text_lines = recognition_service.detect_text(image_id)
+    entity_lines = []
+    for line in text_lines:
+        entity_line = m_comprehend_service.detect_entities(line['text'])
+        entity_lines.append({
+            'text': line['text'],
+            'entity': entity_line[0]['Type']
+        })
+
+    return entity_lines
