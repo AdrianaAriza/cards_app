@@ -20,7 +20,6 @@ def create_user(name, email, password, role):
         'hashed': Binary(password_fields['hashed']),
         'role': role
     }
-    response = table.put_item(Item=item)
     try:
         response = table.put_item(Item=item)
         print(response)
@@ -29,6 +28,14 @@ def create_user(name, email, password, role):
         return e
 
 
+def get_user_by_email(email):
+    table_name = get_table_name()
+    table = boto3.resource('dynamodb').Table(table_name)
+    try:
+        response = table.get_item(Key={'email': email})
+        return response
+    except Exception as e:
+        return e
 
 
 

@@ -1,4 +1,4 @@
-from chalice import Chalice
+from chalice import Chalice, Response
 from chalicelib import auth, db_users
 from chalicelib.utils import get_table_name, get_app_db, get_authorized_username
 from chalicelib.auth import jwt_auth
@@ -31,6 +31,14 @@ def login():
     jwt_token = auth.get_jwt_token(
         body['email'], body['password'], record)
     return {'token': jwt_token}
+
+
+@app.route('/user/{email}', methods=['GET'])
+def get_user_by_email(email):
+    user = db_users.get_user_by_email(email)
+    if "Item" in user:
+        return {'user': str(user['Item']['email'])}
+    return Response(status_code=400, body="User not found")
 
 
 @app.route('/user/create', methods=['POST'])
@@ -85,7 +93,7 @@ def update_card(card_id):
     )
 
 
-@app.route('/images', methods = ['POST'], cors = True)
+@app.route('/images', methods = ['POST'], cors=True)
 def upload_image():
     """processes file upload and saves file to storage service"""
     request_data = json.loads(app.current_request.raw_body)
