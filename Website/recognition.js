@@ -2,6 +2,15 @@
 
 const serverUrl = "http://127.0.0.1:8000";
 
+const signinSessionKey = "user_signed_in";
+
+// add an event listener to the sign-up button
+const signoutBtn = document.getElementById('sign-out');
+signoutBtn.addEventListener('click', () => {
+  signOut();
+  window.location.href = 'signin.html';
+});
+
 async function uploadImage() {
     // encode input file as base64 string for upload
     let file = document.getElementById("file").files[0];
@@ -100,4 +109,16 @@ class HttpError extends Error {
         this.name = "HttpError";
         this.response = response;
     }
+}
+
+function signOut(){
+    localStorage.removeItem(signinSessionKey)
+    window.location.href = 'signin.html';
+
+}
+
+// check if the user is already signed in
+if (localStorage.getItem(signinSessionKey) === null) {
+  // redirect the user to the dashboard page
+  window.location.href = 'signin.html';
 }
