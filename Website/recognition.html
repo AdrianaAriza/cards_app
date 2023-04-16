@@ -11,43 +11,45 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <h2 class="display-4 col-md-6">Business card DB</h2>
-                <img src="images/search_img.png" class="col-md-6 img-search mt-3">
+                <h2 class="display-4 col-md-4">Business card DB</h2>
+                <button class="button-signout" style="display:inline-block;"><img src="images/signout_img.png" class="img-signout" style="display:inline-block;" onclick="signOut()"></button>
+                <button class="button-search" style="display:inline-block;"><img src="images/search_img.png" class="img-search" style="display:inline-block;"></button>
+
+
             </div>
-            
+
             <div class="img-upload text-center"><img src="images/choose_img.png" id="image"></div>
             <div class="text-center mt-3 pl-3"><input type="file" id="file" name="file" accept="image/*"></div>
             <div class="text-center mt-5"><img src="images/upload_img.png" type="submit" value="Upload" onclick="uploadAndTranslate()"></div>
 
+            <div class="mt-5" style="display:none;" id="form">
             <div class="container-fluid text-center mt-3">
                 <h5>Translated Text:</h5>
-                <div id="entities"> <!--there was a / after the ""-->
+                <div id="entities">
             </div>
-
-            <div class="mt-5">
                 <div class="row mt-1 row-margin">
                     <div class="col-sm-6 text-center"><h4 class="form-left">Name:</h4></div>
-                    <div class="col text-center"><h4 class="form-right" id="name_id">(none)</h4></div>
+                    <div class="col text-center"><h4 class="form-right" id="name_id" contenteditable="true">(click to edit)</h4></div>
                 </div>
                 <div class="row mt-1 row-margin">
                     <div class="col-sm-6 text-center"><h4 class="form-left">Telephone number(s):</h4></div>
-                    <div class="col text-center"><h4 class="form-right" id="tp_id">(none)</h4></div>
+                    <div class="col text-center"><h4 class="form-right" id="tp_id" contenteditable="true">(click to edit)</h4></div>
                 </div>
                 <div class="row mt-1 row-margin">
                     <div class="col-sm-6 text-center"><h4 class="form-left">Email address:</h4></div>
-                    <div class="col text-center"><h4 class="form-right" id="email_id">(none)</h4></div>
+                    <div class="col text-center"><h4 class="form-right" id="email_id" contenteditable="true">(click to edit)</h4></div>
                 </div>
                 <div class="row mt-1 row-margin">
                     <div class="col-sm-6 text-center"><h4 class="form-left">Company website:</h4></div>
-                    <div class="col text-center"><h4 class="form-right" id="website_id">(none)</h4></div>
+                    <div class="col text-center"><h4 class="form-right" id="website_id" contenteditable="true">(click to edit)</h4></div>
                 </div>
                 <div class="row mt-1 row-margin">
                     <div class="col-sm-6 text-center"><h4 class="form-left">Company address:</h4></div>
-                    <div class="col text-center"><h4 class="form-right" id="area_id">(none)</h4></div>
+                    <div class="col text-center"><h4 class="form-right" id="company_address_id" contenteditable="true">(click to edit)</h4></div>
                 </div>
-            </div>
 
-            <div class="text-center mt-4 mb-3 ml-5"><button type="button"><img src="images/save_img.png" class="img-save"></div></button>
+                <div class="text-center mt-4 mb-3 ml-5"><button type="button"><img src="images/save_img.png" class="img-save" onclick="saveJSON()"></div></button>
+            </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
