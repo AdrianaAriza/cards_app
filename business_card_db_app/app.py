@@ -21,7 +21,7 @@ def index():
     return {'hello': 'world'}
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST'], cors=True)
 def login():
     body = app.current_request.json_body
     table_name = get_table_name()
@@ -33,7 +33,7 @@ def login():
     return {'token': jwt_token}
 
 
-@app.route('/user/{email}', methods=['GET'])
+@app.route('/user/{email}', methods=['GET'], cors=True)
 def get_user_by_email(email):
     user = db_users.get_user_by_email(email)
     if "Item" in user:
@@ -41,19 +41,19 @@ def get_user_by_email(email):
     return Response(status_code=400, body="User not found")
 
 
-@app.route('/user/create', methods=['POST'])
+@app.route('/user/create', methods=['POST'], cors=True)
 def create_user():
     body = app.current_request.json_body
     user_id = db_users.create_user(body['name'], body['email'], body['password'], body['role'])
     return {'user_id': str(user_id)}
 
 
-@app.route('/cards/all', methods=['GET'])
+@app.route('/cards/all', methods=['GET'], cors=True)
 def get_all_cards():
     return get_app_db().list_all_items()
 
 
-@app.route('/cards/create', methods=['POST'], authorizer=jwt_auth)
+@app.route('/cards/create', methods=['POST'], authorizer=jwt_auth, cors=True)
 def add_new_card():
     body = app.current_request.json_body
     user = get_authorized_username(app.current_request)
@@ -67,18 +67,18 @@ def add_new_card():
     )
 
 
-@app.route('/cards/{card_id}', methods=['GET'])
+@app.route('/cards/{card_id}', methods=['GET'], cors=True)
 def get_card(card_id):
     return get_app_db().get_item(card_id)
 
 
-@app.route('/cards/{card_id}', methods=['DELETE'], authorizer=jwt_auth)
+@app.route('/cards/{card_id}', methods=['DELETE'], authorizer=jwt_auth, cors=True)
 def delete_card(card_id):
     user = get_authorized_username(app.current_request)
     return get_app_db().delete_item(card_id, user=user)
 
 
-@app.route('/cards/{card_id}', methods=['PUT'], authorizer=jwt_auth)
+@app.route('/cards/{card_id}', methods=['PUT'], authorizer=jwt_auth, cors=True)
 def update_card(card_id):
     body = app.current_request.json_body
     user = get_authorized_username(app.current_request)
