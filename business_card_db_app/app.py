@@ -34,7 +34,7 @@ def login():
 
 
 @app.route('/send_token', methods=['POST'], cors=True)
-def reset_password():
+def reset_token():
     body = app.current_request.json_body
     return db_users.send_token(body['email'])
 
@@ -74,7 +74,11 @@ def update_user():
 
 @app.route('/user/{email}', methods=['DELETE'],  cors=True)
 def delete_user(email):
-    user = db_users.delete_user(email)
+    try:
+        db_users.delete_user(email)
+        return Response(status_code=200, body="User deleted")
+    except Exception as e:
+        return Response(status_code=500, body="An error occurred " + e)
 
 
 @app.route('/user/create', methods=['POST'], cors=True)
@@ -135,24 +139,27 @@ def upload_image():
     request_data = json.loads(app.current_request.raw_body)
     file_name = request_data['filename']
     file_bytes = base64.b64decode(request_data['filebytes'])
-
-    image_info = storage_service.upload_file(file_bytes, file_name)
-
-    return image_info
+    try:
+        image_info = storage_service.upload_file(file_bytes, file_name)
+        return image_info
+    except Exception as e:
+        return Response(status_code=500, body="An error occurred uploading the image, try a different image" + e)
 
 
 @app.route('/images/{image_id}/translate-text', methods = ['POST'], cors = True)
 def translate_image_text(image_id):
     """detects then translates text in the specified image"""
     request_data = json.loads(app.current_request.raw_body)
+    try:
+        text_lines = recognition_service.detect_text(image_id)
+        entity_lines = []
+        for line in text_lines:
+            entity_line = m_comprehend_service.detect_entities(line['text'])
+            entity_lines.append({
+                'text': line['text'],
+                'entity': entity_line[0]['Type']
+            })
 
-    text_lines = recognition_service.detect_text(image_id)
-    entity_lines = []
-    for line in text_lines:
-        entity_line = m_comprehend_service.detect_entities(line['text'])
-        entity_lines.append({
-            'text': line['text'],
-            'entity': entity_line[0]['Type']
-        })
-
-    return entity_lines
+        return entity_lines
+    except Exception as e:
+        return Response(status_code=500, body="An error occurred translating the image, try a different image" + e)
