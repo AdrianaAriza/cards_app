@@ -4,6 +4,13 @@ import boto3
 from boto3.dynamodb.types import Binary
 from chalicelib.utils import get_table_name
 from chalice import Response
+import uuid
+import json
+import base64
+from email.mime.text import MIMEText
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from requests import HTTPError
 
 
 def create_user(name, email, password, role):
@@ -55,8 +62,7 @@ def get_all_users():
         raise e
 
 
-def update_user(data):
-    import pdb; pdb.set_trace()
+def update_user(data, internal=False):
     user = get_user_by_email(data['email'])['Item']
     for key, value in data.items():
         user[key] = value
@@ -64,6 +70,8 @@ def update_user(data):
     table = boto3.resource('dynamodb').Table(table_name)
     try:
         response = table.put_item(Item=user)
+        if internal:
+            return True
         return Response(status_code=200, body="Successfully updated")
     except Exception as e:
         raise e
@@ -84,5 +92,46 @@ def delete_user(email):
         return Response(status_code=502, body=f"External error:  {str(e)}")
 
 
+def send_token(email):
+    recovery_token = str(uuid.uuid4())
+    data = {'email': email, 'recovery_token': recovery_token}
+    update_user(data, internal=True)
+
+    SCOPES = [
+        "https://www.googleapis.com/auth/gmail.send"
+    ]
+    flow = InstalledAppFlow.from_client_secrets_file('/Users/adru/Documents/College/4. CLOUD ML/cards_app/business_card_db_app/client_secret_961443350956-3km2emk4epg8h0js8vdphjckf0opp4vm.apps.googleusercontent.com.json', SCOPES)
+    creds = flow.run_local_server(port=0)
+    service = build('gmail', 'v1', credentials=creds)
+
+    message = MIMEText(f'The recovery token is {recovery_token}')
+    message['to'] = email
+    message['subject'] = 'Recovery Token'
+    create_message = {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}
+
+    try:
+        message = (service.users().messages().send(userId="me", body=create_message).execute())
+        print(F'sent message to {message} Message Id: {message["id"]}')
+        Response(status_code=200, body="Email successfully sent")
+
+    except HTTPError as error:
+        print(F'An error occurred: {error}')
+        return Response(status_code=400, body="Fail email sending")
+
+
+def reset_password(data):
+    user = get_user_by_email(data['email'])['Item']
+    if data['token'] != user['recovery_token']:
+        return Response(status_code=400, body="Wrong Token")
+    password_fields = encode_password(data['password'])
+    item = {
+        'email': data['email'],
+        'hash': password_fields['hash'],
+        'salt': Binary(password_fields['salt']),
+        'rounds': password_fields['rounds'],
+        'hashed': Binary(password_fields['hashed']),
+    }
+    update_user(item, internal=True)
+    return Response(status_code=400, body="Password updated successfully")
 
 

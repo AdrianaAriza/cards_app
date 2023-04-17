@@ -151,7 +151,7 @@ function saveJSON() {
     fetch("http://127.0.0.1:8000/cards/create", requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+        .catch(error => signOut());
 }
 
 
@@ -172,7 +172,6 @@ if (localStorage.getItem(signinSessionKey) === null) {
       let token = localStorage.getItem(signinSessionKey)
       let user = decodeJwt(token)
       let role = user.role;
-      console.log(user)
       if (role === 'user') {
 
         var adminConsoleElement = document.getElementById("admin-console");

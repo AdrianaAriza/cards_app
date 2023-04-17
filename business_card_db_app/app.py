@@ -33,6 +33,18 @@ def login():
     return {'token': jwt_token}
 
 
+@app.route('/send_token', methods=['POST'], cors=True)
+def reset_password():
+    body = app.current_request.json_body
+    return db_users.send_token(body['email'])
+
+
+@app.route('/reset_password', methods=['POST'], cors=True)
+def reset_password():
+    body = app.current_request.json_body
+    return db_users.reset_password(body)
+
+
 @app.route('/user/{email}', methods=['GET'], cors=True)
 def get_user_by_email(email):
     user = db_users.get_user_by_email(email)
@@ -41,7 +53,7 @@ def get_user_by_email(email):
     return Response(status_code=400, body="User not found")
 
 
-@app.route('/user/all', methods=['GET'],  cors=True)
+@app.route('/user/all', methods=['GET'], authorizer=jwt_auth, cors=True)
 def get_all_users():
 
     users = db_users.get_all_users()

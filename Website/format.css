@@ -1,4 +1,5 @@
-.signin-form {
+.signin-form,
+.reset-form{
   max-width: 400px;
   margin: auto;
   padding: 20px;
@@ -6,17 +7,21 @@
   border-radius: 5px;
 }
 
-.signin-form h1 {
+.signin-form h1,
+.reset-form h1{
   text-align: center;
 }
 
-.signin-form label {
+.signin-form label,
+.reset-form label{
   display: block;
   margin-bottom: 10px;
 }
 
 .signin-form input[type="text"],
-.signin-form input[type="password"] {
+.signin-form input[type="password"],
+.reset-form input[type='text'],
+.reset-form input[type='password']{
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -109,4 +114,35 @@
   display: flex;
   justify-content: center;
   padding-bottom: 5rem;
+}
+
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.modal-content,
+.modal-content2 {
+  background-color: white;
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 5px;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }

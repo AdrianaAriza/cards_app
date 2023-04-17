@@ -6,6 +6,7 @@ from chalice import Chalice, AuthResponse
 from chalicelib import auth
 import jwt
 from chalice import UnauthorizedError
+import json
 
 app = Chalice(app_name='business_card_db_app')
 
@@ -33,7 +34,6 @@ def get_jwt_token(username, password, record):
         return jwt.encode(payload, _SECRET, algorithm='HS256')
     raise UnauthorizedError('Invalid password')
 
-
 def decode_jwt_token(token):
     print(token)
     return jwt.decode(token, _SECRET, algorithms=['HS256'])
@@ -44,4 +44,14 @@ def jwt_auth(auth_request):
     token = auth_request.token
     token = str.replace(str(token), 'Bearer ', '')
     decoded = auth.decode_jwt_token(token)
+    now = datetime.datetime.now()
+    if now > datetime.datetime.fromtimestamp(decoded['iat']) + datetime.timedelta(minutes=5):
+        response_body = {'error': 'Token expired'}
+        status_code = 403
+        headers = {'Content-Type': 'application/json'}
+        return {
+            'statusCode': status_code,
+            'headers': headers,
+            'body': json.dumps(response_body)
+        }
     return AuthResponse(routes=['*'], principal_id=decoded['sub'])

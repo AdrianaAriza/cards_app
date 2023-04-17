@@ -23,7 +23,43 @@
         <p>Don't have an account?</p>
         <button id="signup-btn">Sign Up</button>
       </div>
+      <div class="signup-tab">
+        <p>Forgot the password?</p>
+        <button id="reset_password">Reset Password</button>
+      </div>
     </div>
+
+    <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="reset-form">
+      <h2>Forgot Password</h2>
+      <p>Please enter your email address to reset your password.</p>
+      <input type="text" id="emailInput" placeholder="Email address" required>
+      <br>
+      <button class="send">Send token</button>
+      <button class="cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+    <div id="modal2" class="modal">
+    <div class="modal-content2">
+      <h2>New Password</h2>
+      <div class="reset-form">
+        <form id="reset-form">
+          <label for="emailInput2">Email:</label>
+          <input type="text" id="emailInput2" placeholder="Email address" required>
+          <label for="password2">New Password:</label>
+          <input type="password" id="password2" placeholder="New password" required>
+          <label for="token">Token:</label>
+          <input type="text" id="token" placeholder="Token" required>
+          </form>
+      </div>
+      <br>
+      <button class="update-password">update password</button>
+      <button class="cancel">Cancel</button>
+    </div>
+  </div>
     <script src="script-signin.js"></script>
   </body>
 </html>

@@ -24,8 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateEmail = document.getElementById('updateEmail');
     const updateRole = document.getElementById('updateRole');
 
+    let token = localStorage.getItem(signinSessionKey)
+
     // Fetch user data from API
-    fetch('http://127.0.0.1:8000/user/all')
+    fetch('http://127.0.0.1:8000/user/all', {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + JSON.parse(token).token
+            }
+        })
         .then(response => response.json())
         .then(users => {
             // Function to update a user row in the table
@@ -37,8 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     row.querySelector('.name').textContent = user.name;
                     row.querySelector('.email').textContent = user.email;
                     row.querySelector('.role').textContent = user.role;
-                }
+                };
+                updateUserInFetchResponse(user)
             };
+
+            function updateUserInFetchResponse(user) {
+              let foundUser = null;
+              for (let i = 0; i < users.length; i++) {
+                if (users[i].email === user.email) {
+                  foundUser = users[i];
+                  foundUser.email = user.email;
+                  foundUser.name = user.name;
+                  foundUser.role = user.role;
+                }
+              }
+}
 
             // Loop through each user and create a row in the table
             users.forEach(user => {
@@ -110,10 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Close the modal when the cancel button is clicked
-            // const cancelButton = document.querySelector('#myModal .cancel');
-            // cancelButton.addEventListener('click', () => {
-            //     modal.style.display = 'none';
-            // });
+            const cancelButton = document.querySelector('#myModal .cancel');
+            cancelButton.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
 
             // Update user data when the update form is submitted
             updateForm.addEventListener('submit', async (event) => {
@@ -145,15 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         role: updatedRole
                     };
                     updateUserRow(updatedUser);
-
-                    // Hide the modal
                     modal.style.display = 'none';
-
-                    // Clear form inputs
                     updateForm.reset();
 
-                    // Show success message
-                    alert('User updated successfully');
                 } else {
                     // Show error message
                     alert('Failed to update user');
@@ -162,5 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error fetching user data:', error);
+            alert('Session Expired');
+            signOut()
         });
 });
