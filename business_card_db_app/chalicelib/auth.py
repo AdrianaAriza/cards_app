@@ -27,7 +27,8 @@ def get_jwt_token(username, password, record):
             'sub': username,
             'iat': now,
             'nbf': now,
-            'jti': unique_id
+            'jti': unique_id,
+            'role': record['role']
         }
         return jwt.encode(payload, _SECRET, algorithm='HS256')
     raise UnauthorizedError('Invalid password')

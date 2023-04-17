@@ -1,5 +1,5 @@
 body {
-    background-color: azure;
+    background-color: white;
 }
 
 button {
@@ -14,30 +14,32 @@ button {
     padding-top: 3.3em;
 }
 
-.img-search {
-    width: 150px;
-    height: 50px;
+.business {
+    height: 150px;
+    margin-left: 4rem;
+    margin-top: 2rem;
 }
 
-.button-search {
+.buttons-container{
+    margin-left: 40rem;
+}
+
+.button-search,
+.button-admin-console,
+.button-signout{
+    background: white;
     width: 100px;
     height: 50px;
     margin-left: auto;
-    margin-right: 4.2rem;
+    margin-right: 3rem;
     margin-top: 0.5rem;
 }
 
-.img-signout {
-    width: 150px;
+.img-search,
+.img-signout,
+.img-admin-console {
+    background: white;
     height: 50px;
-}
-
-.button-signout {
-    width: 100px;
-    height: 50px;
-    margin-left: 875px;
-    margin-right: 2rem;
-    margin-top: 0.5rem;
 }
 
 .img-save {

@@ -11,6 +11,11 @@ signoutBtn.addEventListener('click', () => {
   window.location.href = 'signin.html';
 });
 
+const console_adminBtn = document.getElementById('admin-console');
+console_adminBtn.addEventListener('click', () => {
+  window.location.href = 'console-admin.html';
+});
+
 async function uploadImage() {
     // encode input file as base64 string for upload
     let file = document.getElementById("file").files[0];
@@ -75,22 +80,25 @@ function translateImage(image) {
 }
 
 function annotateImage(entities) {
-    let entitiesElem = document.getElementById("entities");
-    while (entitiesElem.firstChild) {
-        entitiesElem.removeChild(entitiesElem.firstChild);
+    document.getElementById("form").style.display="block"
+    for (let i=0; i<entities.length; i++) {
+        if (entities[i]["entity"] == "PHONE_OR_FAX") {
+            let phoneId = document.getElementById("tp_id");
+            phoneId.innerText = entities[i]["text"];
+        } else if (entities[i]["entity"] == "NAME") {
+            let nameId = document.getElementById("name_id");
+            nameId.innerText = entities[i]["text"];
+        } else if (entities[i]["entity"] == "EMAIL") {
+            let emailId = document.getElementById("email_id");
+            emailId.innerText = entities[i]["text"];
+        } else if (entities[i]["entity"] == "URL") {
+            const urlId = document.getElementById("website_id");
+            urlId.innerText = entities[i]["text"];
+        } else if (entities[i]["entity"] == "ADDRESS") {
+            let addressId = document.getElementById("company_address_id");
+            addressId.innerText = entities[i]["text"];
+        }
     }
-    entitiesElem.clear
-    //entities = JSON.stringify(entities)
-    for (let i = 0; i < entities.length; i++) {
-        let entitiyElem = document.createElement("h6");
-        entitiyElem.appendChild(document.createTextNode(
-            //entities
-            entities[i]["text"] + " -> " + entities[i]["entity"]
-        ));
-        entitiesElem.appendChild(document.createElement("hr"));
-        entitiesElem.appendChild(entitiyElem);
-    }
-    return entities
 }
 
 function uploadAndTranslate() {
@@ -111,6 +119,42 @@ class HttpError extends Error {
     }
 }
 
+function saveJSON() {
+    let companyWebsite = document.getElementById("website_id").innerHTML;
+    let name = document.getElementById("name_id").innerHTML;
+    let phone = document.getElementById("tp_id").innerHTML;
+    let email = document.getElementById("email_id").innerHTML;
+    let address = document.getElementById("company_address_id").innerHTML;
+
+
+    let token = localStorage.getItem(signinSessionKey)
+
+    var raw = JSON.stringify({
+        "name": name,
+        "telephone_number": phone,
+        "email": email,
+        "company_website": companyWebsite,
+        "company_address": address
+    });
+
+    var requestOptions = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + JSON.parse(token).token
+        },
+        body: raw,
+        redirect: 'follow'
+    };
+
+    fetch("http://127.0.0.1:8000/cards/create", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+}
+
+
 function signOut(){
     localStorage.removeItem(signinSessionKey)
     window.location.href = 'signin.html';
@@ -121,4 +165,30 @@ function signOut(){
 if (localStorage.getItem(signinSessionKey) === null) {
   // redirect the user to the dashboard page
   window.location.href = 'signin.html';
+}
+
+ window.onload = function() {
+
+      let token = localStorage.getItem(signinSessionKey)
+      let user = decodeJwt(token)
+      let role = user.role;
+      console.log(user)
+      if (role === 'user') {
+
+        var adminConsoleElement = document.getElementById("admin-console");
+
+        adminConsoleElement.style.display = "none";
+      }
+    };
+
+function decodeJwt(jwt) {
+
+  var parts = jwt.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Invalid JWT: Expected three parts separated by dots.");
+  }
+  var payloadBase64 = parts[1];
+  var payload = atob(payloadBase64);
+  var payloadJson = JSON.parse(payload);
+  return payloadJson;
 }

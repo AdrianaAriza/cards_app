@@ -41,6 +41,30 @@ def get_user_by_email(email):
     return Response(status_code=400, body="User not found")
 
 
+@app.route('/user/all', methods=['GET'],  cors=True)
+def get_all_users():
+
+    users = db_users.get_all_users()
+    response = [{'email': u['email'], 'name': u['name'], 'role': u['role']} for u in users]
+    if users:
+        return json.dumps(response)
+    return Response(status_code=400, body="Not users found")
+
+
+@app.route('/user/update', methods=['PUT'],  cors=True)
+def update_user():
+    data = app.current_request.json_body
+    users = db_users.update_user(data)
+    if users:
+        return json.dumps({'status': "User updated"})
+    return Response(status_code=400, body="Not users found")
+
+
+@app.route('/user/{email}', methods=['DELETE'],  cors=True)
+def delete_user(email):
+    user = db_users.delete_user(email)
+
+
 @app.route('/user/create', methods=['POST'], cors=True)
 def create_user():
     body = app.current_request.json_body

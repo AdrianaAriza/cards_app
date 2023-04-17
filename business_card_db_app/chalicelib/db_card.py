@@ -26,8 +26,14 @@ class DynamoDBCard(CardDB):
 
     def list_all_items(self):
         try:
-            response = self._table.scan()
-            return response['Items']
+            scan_params = {}
+            response = self._table.scan(**scan_params)
+            cards = response['Items']
+            while 'LastEvaluatedKey' in response:
+                scan_params['ExclusiveStartKey'] = response['LastEvaluatedKey']
+                response = self._table.scan(**scan_params)
+                cards.extend(response['Items'])
+            return cards
         except Exception as e:
             return Response(status_code=502, body=f"External error:  {str(e)}")
 

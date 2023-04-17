@@ -99,3 +99,14 @@
   display: inline-block;
   margin-right: 10px;
 }
+
+.business {
+    height: 150px;
+    margin-left: 4rem;
+    margin-top: 2rem;
+}
+.nav {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 5rem;
+}
