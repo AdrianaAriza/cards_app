@@ -97,13 +97,16 @@ sendTokenButton.addEventListener('click', () => {
       email: email
     })
     }).then(response => {
-      if (response.status !== 200) {
-        throw new Error('Invalid email. Please try again.');
+      if (response.status != 200) {
+        alert("Invalid email, please try again")
+        modal.style.display = 'none';
       }
-      return response.json();
+      else{
+        modal.style.display = 'none';
+        modal2.style.display = 'block';
+      }
     })
-    modal.style.display = 'none';
-    modal2.style.display = 'block';
+
 });
 
 const resetButton = document.querySelector('#modal2 .update-password');

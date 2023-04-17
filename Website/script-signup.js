@@ -6,7 +6,7 @@ document.getElementById("signup-form").addEventListener("submit", function(event
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  const role = document.getElementById('role').value;
+  // const role = document.getElementById('role').value;
 
   // make a POST request to the create endpoint
   fetch('http://127.0.0.1:8000/user/create', {
@@ -18,13 +18,15 @@ document.getElementById("signup-form").addEventListener("submit", function(event
       name: name,
       password: password,
       email: email,
-      role: role
+      role: "user"
     })
   }).then(response => {
     // handle the response
 
     // clear the form input
     document.getElementById("signup-form").reset();
+    alert("User successfully created, redirecting to login")
+    window.location.href = 'signin.html';
   }).catch(error => {
     // handle the error
   });
