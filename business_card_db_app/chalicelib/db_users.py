@@ -63,7 +63,11 @@ def get_all_users():
 
 
 def update_user(data, internal=False):
-    user = get_user_by_email(data['email'])['Item']
+    user = get_user_by_email(data['email'])
+    if "Item" in user:
+        user = user['Item']
+    else:
+        return Response(status_code=400, body="User not found")
     for key, value in data.items():
         user[key] = value
     table_name = get_table_name()
@@ -100,7 +104,8 @@ def send_token(email):
     SCOPES = [
         "https://www.googleapis.com/auth/gmail.send"
     ]
-    flow = InstalledAppFlow.from_client_secrets_file('/Users/adru/Documents/College/4. CLOUD ML/cards_app/business_card_db_app/client_secret_961443350956-3km2emk4epg8h0js8vdphjckf0opp4vm.apps.googleusercontent.com.json', SCOPES)
+    flow = InstalledAppFlow.from_client_secrets_file(
+        '/Users/adru/Documents/College/4. CLOUD ML/cards_app/business_card_db_app/client_secret_961443350956-3km2emk4epg8h0js8vdphjckf0opp4vm.apps.googleusercontent.com.json', SCOPES)
     creds = flow.run_local_server(port=0)
     service = build('gmail', 'v1', credentials=creds)
 
@@ -120,18 +125,21 @@ def send_token(email):
 
 
 def reset_password(data):
-    user = get_user_by_email(data['email'])['Item']
-    if data['token'] != user['recovery_token']:
-        return Response(status_code=400, body="Wrong Token")
-    password_fields = encode_password(data['password'])
-    item = {
-        'email': data['email'],
-        'hash': password_fields['hash'],
-        'salt': Binary(password_fields['salt']),
-        'rounds': password_fields['rounds'],
-        'hashed': Binary(password_fields['hashed']),
-    }
-    update_user(item, internal=True)
-    return Response(status_code=400, body="Password updated successfully")
+    user = get_user_by_email(data['email'])
+    if "Item" in user:
+        user = user['Item']
 
+        if data['token'] != user['recovery_token']:
+            return Response(status_code=400, body="Wrong Token")
+        password_fields = encode_password(data['password'])
+        item = {
+            'email': data['email'],
+            'hash': password_fields['hash'],
+            'salt': Binary(password_fields['salt']),
+            'rounds': password_fields['rounds'],
+            'hashed': Binary(password_fields['hashed']),
+        }
+        update_user(item, internal=True)
+        return Response(status_code=200, body="Password updated successfully")
 
+    return Response(status_code=400, body="User not found")

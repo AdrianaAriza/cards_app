@@ -34,9 +34,14 @@ def login():
 
 
 @app.route('/send_token', methods=['POST'], cors=True)
-def reset_token():
+def send_token():
     body = app.current_request.json_body
-    return db_users.send_token(body['email'])
+    user = db_users.get_user_by_email(body['email'])
+    if "Item" in user:
+        user = user['Item']
+        return db_users.send_token(body['email'])
+    else:
+        return Response(status_code=400, body="User not found")
 
 
 @app.route('/reset_password', methods=['POST'], cors=True)
