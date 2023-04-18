@@ -1,0 +1,133 @@
+body {
+    background-color: white;
+}
+
+h1 {
+    text-align: center; /* Add this line to center the title */
+}
+
+table {
+    width: 70%;
+    border-collapse: collapse;
+    margin: 20px auto; /* Add margin to the table in all sides */
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: lightgray;
+}
+
+button {
+    margin-right: 5px;
+    border: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #f4f4f4;
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    max-width: 90%;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.modal h2 {
+    margin-top: 0;
+}
+
+.modal label,
+.modal input,
+.modal button {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.modal input {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.modal button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.modal button.cancel {
+    background-color: #ccc;
+}
+
+.business {
+    height: 150px;
+    margin-left: 3%;
+    margin-top: 1%;
+}
+
+.buttons-container{
+    margin-left: 20%;
+}
+
+
+.button-home,
+.button-signout{
+    background: white;
+    width: 100px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: 3rem;
+    margin-top: 0.5rem;
+}
+
+.button-search{
+    background: white;
+    width: 100px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: 2rem;
+    margin-top: 0.5rem;
+}
+.button-clear{
+    background: white;
+    width: 100px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: 3rem;
+    margin-top: 0.5rem;
+}
+
+.img-search,
+.img-signout,
+.img-home {
+    background: white;
+    height: 50px;
+}
+
+.img-download{
+margin-left: 75%;
+margin-bottom: 40%
+width: 100px;
+    height: 50px;
+}

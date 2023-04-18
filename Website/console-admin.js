@@ -11,6 +11,13 @@ console_adminBtn.addEventListener('click', () => {
   window.location.href = 'recognition.html';
 });
 
+
+const searchBtn = document.getElementById('card-search');
+searchBtn.addEventListener('click', () => {
+  window.location.href = 'cards-view.html';
+});
+
+
 function signOut(){
     localStorage.removeItem(signinSessionKey)
     window.location.href = 'signin.html';

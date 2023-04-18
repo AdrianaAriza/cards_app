@@ -11,6 +11,12 @@ signoutBtn.addEventListener('click', () => {
   window.location.href = 'signin.html';
 });
 
+const searchBtn = document.getElementById('card-search');
+searchBtn.addEventListener('click', () => {
+  window.location.href = 'cards-view.html';
+});
+
+
 const console_adminBtn = document.getElementById('admin-console');
 console_adminBtn.addEventListener('click', () => {
   window.location.href = 'console-admin.html';
