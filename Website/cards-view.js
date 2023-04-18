@@ -2,13 +2,13 @@ const signinSessionKey = "user_signed_in";
 let card_cid;
 let cards_to_print;
 
-function signOut(){
-    localStorage.removeItem(signinSessionKey)
-    window.location.href = 'signin.html';
+function signOut() {
+  localStorage.removeItem(signinSessionKey)
+  window.location.href = 'signin.html';
 
 }
 const signoutBtn = document.getElementById('sign-out');
-signoutBtn.addEventListener('click', signOut );
+signoutBtn.addEventListener('click', signOut);
 
 const homeBtn = document.getElementById('home');
 homeBtn.addEventListener('click', () => {
@@ -53,225 +53,225 @@ function decodeJwt(jwt) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	let searchStr = "";
-	if (urlParams.has('search')) searchStr = urlParams.get('search')
-	console.log(queryString);
-	console.log(searchStr);
-	searchInput.value = searchStr;
-	
-    const tbody = document.querySelector('tbody');
-    const modal = document.getElementById('cardModal');
-    const updateForm = document.getElementById('updateForm');
-    const updateName = document.getElementById('updateName');
-    const updateEmail = document.getElementById('updateEmail');
-    const updateRole = document.getElementById('updateRole');
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  let searchStr = "";
+  if (urlParams.has('search')) searchStr = urlParams.get('search')
+  console.log(queryString);
+  console.log(searchStr);
+  searchInput.value = searchStr;
 
-    let token = localStorage.getItem(signinSessionKey)
-	let account = decodeJwt(token)
-	console.log(account)
+  const tbody = document.querySelector('tbody');
+  const modal = document.getElementById('cardModal');
+  const updateForm = document.getElementById('updateForm');
+  const updateName = document.getElementById('updateName');
+  const updateEmail = document.getElementById('updateEmail');
+  const updateRole = document.getElementById('updateRole');
 
-    // Fetch card data from API
-    fetch('http://127.0.0.1:8000/cards/all', {
+  let token = localStorage.getItem(signinSessionKey)
+  let account = decodeJwt(token)
+  console.log(account)
+
+  // Fetch card data from API
+  fetch('http://127.0.0.1:8000/cards/all', {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + JSON.parse(token).token
+    }
+  })
+    .then(response => response.json())
+    .then(cards => {
+      cards_to_print = cards
+      // Loop through each card and create a row in the table
+      cards.forEach(card => {
+        if (searchStr != "") {
+          testStr = ""
+          testStr = testStr.concat(card.name).concat("|")
+          testStr = testStr.concat(card.email).concat("|")
+          testStr = testStr.concat(card.telephone_number).concat("|")
+          testStr = testStr.concat(card.company_website).concat("|")
+          testStr = testStr.concat(card.company_address).concat("|")
+
+          if (!testStr.match(searchStr)) return;
+
+        }
+
+
+
+        const row = document.createElement('tr');
+        row.setAttribute('card-id', card.card_id);
+
+        const nameData = document.createElement('td');
+        nameData.textContent = card.name;
+        nameData.classList.add('name');
+        row.appendChild(nameData);
+
+        const emailData = document.createElement('td');
+        emailData.textContent = card.email;
+        emailData.classList.add('email');
+        row.appendChild(emailData);
+
+        const phoneData = document.createElement('td');
+        phoneData.textContent = card.telephone_number;
+        phoneData.classList.add('phone');
+        row.appendChild(phoneData);
+
+        const fqdnData = document.createElement('td');
+        fqdnData.textContent = card.company_website + " ";
+        fqdnData.classList.add('fqdn');
+
+        fqdnData.insertAdjacentHTML("beforeend", searchSvg);
+        fqdnData.addEventListener('click', () => {
+          window.location.href = 'cards-view.html?search=' + card.company_website;
+        });
+
+        row.appendChild(fqdnData);
+
+        const addrData = document.createElement('td');
+        addrData.textContent = card.company_address;
+        addrData.classList.add('addr');
+        row.appendChild(addrData);
+
+        const actionData = document.createElement('td');
+
+        if (account.sub == card.email_owner || account.role == "admin") {
+
+          // Create update button for each card
+          const updateButton = document.createElement('button');
+          updateButton.textContent = 'Update';
+          updateButton.addEventListener('click', () => {
+            // Populate the modal with card data
+            card_cid = card.card_id;
+            updateName.value = card.name;
+            updateEmail.value = card.email;
+            updatePhone.value = card.telephone_number;
+            updateFQDN.value = card.company_website;
+            updateAddr.value = card.company_address;
+
+            // Show the modal
+            modal.style.display = 'block';
+          });
+          actionData.appendChild(updateButton);
+
+          // Create delete button for each card
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', async () => {
+            // Delete the card from the API
+            const card_cid = card.card_id;
+            const response = await fetch(`http://127.0.0.1:8000/cards/${card_cid}`, {
+              method: 'DELETE',
+              mode: 'cors',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + JSON.parse(token).token
+              }
+            });
+
+            if (response.ok) {
+              // card deleted successfully
+              console.log(`card ${card_cid} deleted`);
+              // Remove the card row from the table
+              row.remove();
+              // Show success message
+              alert('card deleted successfully');
+            } else {
+              // Error deleting card
+              console.error('Error deleting card:', response.statusText);
+              // Show error message
+              alert('Failed to delete card');
+            }
+          });
+          actionData.appendChild(deleteButton);
+        } else {
+          actionData.textContent = "(Unauthorized)";
+        }
+
+        row.appendChild(actionData);
+
+        // Append the row to the table
+        tbody.appendChild(row);
+      });
+
+      // Close the modal when the cancel button is clicked
+      const cancelButton = document.querySelector('#cardModal .cancel');
+      cancelButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+
+
+      // Update card data when the update form is submitted
+      updateForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Get updated card data from form inputs
+        const updatedCard = {
+          name: updateName.value,
+          email: updateEmail.value,
+          telephone_number: updatePhone.value,
+          company_website: updateFQDN.value,
+          company_address: updateAddr.value,
+        };
+
+
+        // Update card data in the API using PUT request
+        const response = await fetch(`http://127.0.0.1:8000/cards/${card_cid}`, {
+          method: 'PUT',
+          mode: 'cors',
           headers: {
-            'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': "Bearer " + JSON.parse(token).token
-            }
-          })
-        .then(response => response.json())
-        .then(cards => {
-            cards_to_print = cards
-            // Loop through each card and create a row in the table
-            cards.forEach(card => {
-				if(searchStr != "") {
-					testStr = ""
-					testStr = testStr.concat(card.name).concat("|")
-					testStr = testStr.concat(card.email).concat("|")
-					testStr = testStr.concat(card.telephone_number).concat("|")
-					testStr = testStr.concat(card.company_website).concat("|")
-					testStr = testStr.concat(card.company_address).concat("|")
-					
-					if(! testStr.match(searchStr) ) return;
-					
-				}
-				
-				
-				
-                const row = document.createElement('tr');
-                row.setAttribute('card-id', card.card_id);
-
-                const nameData = document.createElement('td');
-                nameData.textContent = card.name;
-                nameData.classList.add('name');
-                row.appendChild(nameData);
-
-                const emailData = document.createElement('td');
-                emailData.textContent = card.email;
-                emailData.classList.add('email');
-                row.appendChild(emailData);
-
-                const phoneData = document.createElement('td');
-                phoneData.textContent = card.telephone_number;
-                phoneData.classList.add('phone');
-                row.appendChild(phoneData);
-				
-                const fqdnData = document.createElement('td');
-                fqdnData.textContent = card.company_website + " ";
-                fqdnData.classList.add('fqdn');
-				
-				fqdnData.insertAdjacentHTML("beforeend", searchSvg);
-				fqdnData.addEventListener('click', () => {
-					window.location.href = 'cards-view.html?search=' + card.company_website;
-				});
-				
-                row.appendChild(fqdnData);
-				
-                const addrData = document.createElement('td');
-                addrData.textContent = card.company_address;
-                addrData.classList.add('addr');
-                row.appendChild(addrData);
-
-                const actionData = document.createElement('td');
-				
-				if(account.sub == card.email_owner || account.role == "admin"){
-
-					// Create update button for each card
-					const updateButton = document.createElement('button');
-					updateButton.textContent = 'Update';
-					updateButton.addEventListener('click', () => {
-						// Populate the modal with card data
-						card_cid = card.card_id;
-						updateName.value = card.name;
-						updateEmail.value = card.email;
-						updatePhone.value = card.telephone_number;
-						updateFQDN.value = card.company_website;
-						updateAddr.value = card.company_address;
-
-						// Show the modal
-						modal.style.display = 'block';
-					});
-					actionData.appendChild(updateButton);
-
-					// Create delete button for each card
-					const deleteButton = document.createElement('button');
-					deleteButton.textContent = 'Delete';
-					deleteButton.addEventListener('click', async () => {
-						// Delete the card from the API
-						const card_cid = card.card_id;
-						const response = await fetch(`http://127.0.0.1:8000/cards/${card_cid}`, {
-							method: 'DELETE',
-							mode: 'cors',
-							headers: {
-								'Content-Type': 'application/json',
-								'Authorization': "Bearer " + JSON.parse(token).token
-							}
-						});
-
-						if (response.ok) {
-							// card deleted successfully
-							console.log(`card ${card_cid} deleted`);
-							// Remove the card row from the table
-							row.remove();
-							// Show success message
-							alert('card deleted successfully');
-						} else {
-							// Error deleting card
-							console.error('Error deleting card:', response.statusText);
-							// Show error message
-							alert('Failed to delete card');
-						}
-					});
-					actionData.appendChild(deleteButton);
-				}else{
-					actionData.textContent = "(Unauthorized)";
-				}
-
-                row.appendChild(actionData);
-
-                // Append the row to the table
-                tbody.appendChild(row);
-            });
-			
-            // Close the modal when the cancel button is clicked
-            const cancelButton = document.querySelector('#cardModal .cancel');
-            cancelButton.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
-			
-			
-            // Update card data when the update form is submitted
-            updateForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                // Get updated card data from form inputs
-                const updatedCard = {
-                    name: updateName.value,
-                    email: updateEmail.value,
-                    telephone_number: updatePhone.value,
-                    company_website: updateFQDN.value,
-                    company_address: updateAddr.value,
-                };
-					
-				
-                // Update card data in the API using PUT request
-                const response = await fetch(`http://127.0.0.1:8000/cards/${card_cid}`, {
-                    method: 'PUT',
-					mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-						'Authorization': "Bearer " + JSON.parse(token).token
-                    },
-                    body: JSON.stringify(updatedCard)
-                });
-
-                // Check if API response is successful
-                if (response.ok) {
-                    // Update the card row in the table
-                    updateCardRow(updatedCard);
-                    modal.style.display = 'none';
-                    updateForm.reset();
-
-                } else {
-                    // Show error message
-                    alert('Failed to update card');
-                }
-            });
-			
-            // Function to update a card row in the table
-            const updateCardRow = (card) => {
-                const row = tbody.querySelector(`tr[card-id="${card_cid}"]`);
-
-                if (row) {
-                    // Update the row data
-                    row.querySelector('.name').textContent = card.name;
-                    row.querySelector('.email').textContent = card.email;
-                    row.querySelector('.phone').textContent = card.telephone_number;
-                    row.querySelector('.fqdn').textContent = card.company_website;
-                    row.querySelector('.addr').textContent = card.company_address;
-                };
-                updateCardInFetchResponse(card)
-            };
-
-            function updateCardInFetchResponse(card) {
-              let foundCard = null;
-			  console.log(`to update card ${card_cid}`);
-              for (let i = 0; i < cards.length; i++) {
-                if (cards[i].card_id == card_cid) {
-                  cards[i] = card;
-				  console.log(`cards i ${cards[i]} updated`);
-                }
-              }
-			  
-			}
-			
-        }) // cards => 
-        .catch(error => {
-            console.error('Error fetching card data:', error);
-            alert('Session Expired');
-            signOut()
+          },
+          body: JSON.stringify(updatedCard)
         });
+
+        // Check if API response is successful
+        if (response.ok) {
+          // Update the card row in the table
+          updateCardRow(updatedCard);
+          modal.style.display = 'none';
+          updateForm.reset();
+
+        } else {
+          // Show error message
+          alert('Failed to update card');
+        }
+      });
+
+      // Function to update a card row in the table
+      const updateCardRow = (card) => {
+        const row = tbody.querySelector(`tr[card-id="${card_cid}"]`);
+
+        if (row) {
+          // Update the row data
+          row.querySelector('.name').textContent = card.name;
+          row.querySelector('.email').textContent = card.email;
+          row.querySelector('.phone').textContent = card.telephone_number;
+          row.querySelector('.fqdn').textContent = card.company_website;
+          row.querySelector('.addr').textContent = card.company_address;
+        };
+        updateCardInFetchResponse(card)
+      };
+
+      function updateCardInFetchResponse(card) {
+        let foundCard = null;
+        console.log(`to update card ${card_cid}`);
+        for (let i = 0; i < cards.length; i++) {
+          if (cards[i].card_id == card_cid) {
+            cards[i] = card;
+            console.log(`cards i ${cards[i]} updated`);
+          }
+        }
+
+      }
+
+    }) // cards => 
+    .catch(error => {
+      console.error('Error fetching card data:', error);
+      alert('Session Expired');
+      signOut()
+    });
 });
 
 
@@ -281,18 +281,18 @@ const searchSvg = `<svg fill="#21a2f2" height="16px" width="16px" version="1.1" 
 function downloadCSV() {
 
 
-let csv = '';
-csv += 'Name,	Email,	Telephone,	Company website, Company address \n'
-cards_to_print.forEach((row) => {
-  csv += row['name'] + ',' + row['email'] + ',' +  row['telephone_number'] + ',' + row['company_website'] + ',' + row['company_address']  + '\n';
-});
+  let csv = '';
+  csv += 'Name,	Email,	Telephone,	Company website, Company address \n'
+  cards_to_print.forEach((row) => {
+    csv += row['name'] + ',' + row['email'] + ',' + row['telephone_number'] + ',' + row['company_website'] + ',' + row['company_address'] + '\n';
+  });
 
-const blob = new Blob([csv], { type: 'text/csv' });
-const url = URL.createObjectURL(blob);
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
 
-const link = document.createElement('a');
-link.href = url;
-link.download = 'data.csv';
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'data.csv';
 
-link.click();
+  link.click();
 }

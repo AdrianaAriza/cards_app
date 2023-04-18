@@ -1,4 +1,4 @@
-document.getElementById("signup-form").addEventListener("submit", function(event) {
+document.getElementById("signup-form").addEventListener("submit", function (event) {
   // prevent the default form submission behavior
   event.preventDefault();
 
@@ -35,4 +35,3 @@ const signinBtn = document.getElementById('signin-btn');
 signinBtn.addEventListener('click', () => {
   window.location.href = 'signin.html';
 });
-

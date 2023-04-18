@@ -1,5 +1,5 @@
 .signin-form,
-.reset-form{
+.reset-form {
   max-width: 400px;
   margin: auto;
   padding: 20px;
@@ -8,12 +8,12 @@
 }
 
 .signin-form h1,
-.reset-form h1{
+.reset-form h1 {
   text-align: center;
 }
 
 .signin-form label,
-.reset-form label{
+.reset-form label {
   display: block;
   margin-bottom: 10px;
 }
@@ -21,7 +21,7 @@
 .signin-form input[type="text"],
 .signin-form input[type="password"],
 .reset-form input[type='text'],
-.reset-form input[type='password']{
+.reset-form input[type='password'] {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -106,10 +106,11 @@
 }
 
 .business {
-    height: 150px;
-    margin-left: 3%;
-    margin-top: 1%;
+  height: 150px;
+  margin-left: 3%;
+  margin-top: 1%;
 }
+
 .nav {
   display: flex;
   justify-content: center;

@@ -2,23 +2,23 @@ const signinSessionKey = "user_signed_in";
 
 const signoutBtn = document.getElementById('sign-out');
 signoutBtn.addEventListener('click', () => {
-  signOut();
-  window.location.href = 'signin.html';
+    signOut();
+    window.location.href = 'signin.html';
 });
 
 const console_adminBtn = document.getElementById('home');
 console_adminBtn.addEventListener('click', () => {
-  window.location.href = 'recognition.html';
+    window.location.href = 'recognition.html';
 });
 
 
 const searchBtn = document.getElementById('card-search');
 searchBtn.addEventListener('click', () => {
-  window.location.href = 'cards-view.html';
+    window.location.href = 'cards-view.html';
 });
 
 
-function signOut(){
+function signOut() {
     localStorage.removeItem(signinSessionKey)
     window.location.href = 'signin.html';
 
@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch user data from API
     fetch('http://127.0.0.1:8000/user/all', {
-          headers: {
+        headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': "Bearer " + JSON.parse(token).token
-            }
-        })
+        }
+    })
         .then(response => response.json())
         .then(users => {
             // Function to update a user row in the table
@@ -57,16 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             function updateUserInFetchResponse(user) {
-              let foundUser = null;
-              for (let i = 0; i < users.length; i++) {
-                if (users[i].email === user.email) {
-                  foundUser = users[i];
-                  foundUser.email = user.email;
-                  foundUser.name = user.name;
-                  foundUser.role = user.role;
+                let foundUser = null;
+                for (let i = 0; i < users.length; i++) {
+                    if (users[i].email === user.email) {
+                        foundUser = users[i];
+                        foundUser.email = user.email;
+                        foundUser.name = user.name;
+                        foundUser.role = user.role;
+                    }
                 }
-              }
-}
+            }
 
             // Loop through each user and create a row in the table
             users.forEach(user => {
@@ -161,7 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({
                         name: updatedName,
                         email: updatedEmail,
-                        role: updatedRole})
+                        role: updatedRole
+                    })
                 });
 
                 // Check if API response is successful

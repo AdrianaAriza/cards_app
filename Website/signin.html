@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>User Sign In</title>
-    <link rel="stylesheet" type="text/css" href="format.css">
-  </head>
-  <body>
-    <div class="nav">
-              <img src="images/business.png" id="business" class="business" style="display:inline-block;">
+
+<head>
+  <title>User Sign In</title>
+  <link rel="stylesheet" type="text/css" href="format.css">
+</head>
+
+<body>
+  <div class="nav">
+    <img src="images/business.png" id="business" class="business" style="display:inline-block;">
+  </div>
+  <div class="signin-form">
+    <h1>User Sign In</h1>
+    <form id="signin-form">
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <input type="submit" value="Sign In">
+    </form>
+    <div class="signup-tab">
+      <p>Don't have an account?</p>
+      <button id="signup-btn">Sign Up</button>
     </div>
-    <div class="signin-form">
-      <h1>User Sign In</h1>
-      <form id="signin-form">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <input type="submit" value="Sign In">
-      </form>
-      <div class="signup-tab">
-        <p>Don't have an account?</p>
-        <button id="signup-btn">Sign Up</button>
-      </div>
-      <div class="signup-tab">
-        <p>Forgot the password?</p>
-        <button id="reset_password">Reset Password</button>
-      </div>
+    <div class="signup-tab">
+      <p>Forgot the password?</p>
+      <button id="reset_password">Reset Password</button>
     </div>
+  </div>
 
-    <div id="modal" class="modal">
+  <div id="modal" class="modal">
     <div class="modal-content">
       <div class="reset-form">
-      <h2>Forgot Password</h2>
-      <p>Please enter your email address to reset your password.</p>
-      <input type="text" id="emailInput" placeholder="Email address" required>
-      <br>
-      <button class="send">Send token</button>
-      <button class="cancel">Cancel</button>
+        <h2>Forgot Password</h2>
+        <p>Please enter your email address to reset your password.</p>
+        <input type="text" id="emailInput" placeholder="Email address" required>
+        <br>
+        <button class="send">Send token</button>
+        <button class="cancel">Cancel</button>
       </div>
     </div>
   </div>
 
-    <div id="modal2" class="modal">
+  <div id="modal2" class="modal">
     <div class="modal-content2">
       <h2>New Password</h2>
       <div class="reset-form">
@@ -53,13 +55,14 @@
           <input type="password" id="password2" placeholder="New password" required>
           <label for="token">Token:</label>
           <input type="text" id="token" placeholder="Token" required>
-          </form>
+        </form>
       </div>
       <br>
       <button class="update-password">update password</button>
       <button class="cancel">Cancel</button>
     </div>
   </div>
-    <script src="script-signin.js"></script>
-  </body>
+  <script src="script-signin.js"></script>
+</body>
+
 </html>

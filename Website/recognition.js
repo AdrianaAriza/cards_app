@@ -7,25 +7,25 @@ const signinSessionKey = "user_signed_in";
 // add an event listener to the sign-up button
 const signoutBtn = document.getElementById('sign-out');
 signoutBtn.addEventListener('click', () => {
-  signOut();
-  window.location.href = 'signin.html';
+    signOut();
+    window.location.href = 'signin.html';
 });
 
 const searchBtn = document.getElementById('card-search');
 searchBtn.addEventListener('click', () => {
-  window.location.href = 'cards-view.html';
+    window.location.href = 'cards-view.html';
 });
 
 
 const console_adminBtn = document.getElementById('admin-console');
 console_adminBtn.addEventListener('click', () => {
-  window.location.href = 'console-admin.html';
+    window.location.href = 'console-admin.html';
 });
 
 async function uploadImage() {
     // encode input file as base64 string for upload
     let file = document.getElementById("file").files[0];
-    let converter = new Promise(function(resolve, reject) {
+    let converter = new Promise(function (resolve, reject) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result
@@ -45,7 +45,7 @@ async function uploadImage() {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({filename: file.name, filebytes: encodedString})
+        body: JSON.stringify({ filename: file.name, filebytes: encodedString })
     }).then(response => {
         if (response.ok) {
             return response.json();
@@ -74,7 +74,7 @@ function translateImage(image) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({"id":1})
+        body: JSON.stringify({ "id": 1 })
     }).then(response => {
         if (response.ok) {
             return response.json();
@@ -86,8 +86,8 @@ function translateImage(image) {
 }
 
 function annotateImage(entities) {
-    document.getElementById("form").style.display="block"
-    for (let i=0; i<entities.length; i++) {
+    document.getElementById("form").style.display = "block"
+    for (let i = 0; i < entities.length; i++) {
         if (entities[i]["entity"] == "PHONE_OR_FAX") {
             let phoneId = document.getElementById("tp_id");
             phoneId.innerText = entities[i]["text"];
@@ -166,7 +166,7 @@ function saveJSON() {
 }
 
 
-function signOut(){
+function signOut() {
     localStorage.removeItem(signinSessionKey)
     window.location.href = 'signin.html';
 
@@ -174,31 +174,31 @@ function signOut(){
 
 // check if the user is already signed in
 if (localStorage.getItem(signinSessionKey) === null) {
-  // redirect the user to the dashboard page
-  window.location.href = 'signin.html';
+    // redirect the user to the dashboard page
+    window.location.href = 'signin.html';
 }
 
- window.onload = function() {
+window.onload = function () {
 
-      let token = localStorage.getItem(signinSessionKey)
-      let user = decodeJwt(token)
-      let role = user.role;
-      if (role === 'user') {
+    let token = localStorage.getItem(signinSessionKey)
+    let user = decodeJwt(token)
+    let role = user.role;
+    if (role === 'user') {
 
         var adminConsoleElement = document.getElementById("admin-console");
 
         adminConsoleElement.style.display = "none";
-      }
-    };
+    }
+};
 
 function decodeJwt(jwt) {
 
-  var parts = jwt.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Invalid JWT: Expected three parts separated by dots.");
-  }
-  var payloadBase64 = parts[1];
-  var payload = atob(payloadBase64);
-  var payloadJson = JSON.parse(payload);
-  return payloadJson;
+    var parts = jwt.split(".");
+    if (parts.length !== 3) {
+        throw new Error("Invalid JWT: Expected three parts separated by dots.");
+    }
+    var payloadBase64 = parts[1];
+    var payload = atob(payloadBase64);
+    var payloadJson = JSON.parse(payload);
+    return payloadJson;
 }

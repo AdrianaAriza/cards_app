@@ -3,13 +3,15 @@ body {
 }
 
 h1 {
-    text-align: center; /* Add this line to center the title */
+    text-align: center;
+    /* Add this line to center the title */
 }
 
 table {
     width: 70%;
     border-collapse: collapse;
-    margin: 20px auto; /* Add margin to the table in all sides */
+    margin: 20px auto;
+    /* Add margin to the table in all sides */
 }
 
 th,
@@ -86,13 +88,13 @@ button {
     margin-top: 1%;
 }
 
-.buttons-container{
+.buttons-container {
     margin-left: 20%;
 }
 
 
 .button-home,
-.button-signout{
+.button-signout {
     background: white;
     width: 100px;
     height: 50px;
@@ -101,7 +103,7 @@ button {
     margin-top: 0.5rem;
 }
 
-.button-search{
+.button-search {
     background: white;
     width: 100px;
     height: 50px;
@@ -109,7 +111,8 @@ button {
     margin-right: 2rem;
     margin-top: 0.5rem;
 }
-.button-clear{
+
+.button-clear {
     background: white;
     width: 100px;
     height: 50px;
@@ -125,9 +128,8 @@ button {
     height: 50px;
 }
 
-.img-download{
-margin-left: 75%;
-margin-bottom: 40%
-width: 100px;
+.img-download {
+    margin-left: 75%;
+    margin-bottom: 40% width: 100px;
     height: 50px;
 }
