@@ -8,7 +8,7 @@ h1 {
 }
 
 table {
-    width: 70%;
+    width: 80%;
     border-collapse: collapse;
     margin: 20px auto;
     /* Add margin to the table in all sides */
@@ -93,8 +93,9 @@ button {
 }
 
 
+.button-clear,
 .button-home,
-.button-signout {
+.button-signout{
     background: white;
     width: 100px;
     height: 50px;
@@ -103,7 +104,7 @@ button {
     margin-top: 0.5rem;
 }
 
-.button-search {
+.button-search{
     background: white;
     width: 100px;
     height: 50px;
@@ -112,21 +113,22 @@ button {
     margin-top: 0.5rem;
 }
 
-.button-clear {
-    background: white;
-    width: 100px;
-    height: 50px;
-    margin-left: auto;
-    margin-right: 3rem;
-    margin-top: 0.5rem;
-}
 
-.img-search,
 .img-signout,
 .img-home {
     background: white;
     height: 50px;
 }
+
+.img-search {
+    background: white;
+    height: 48px;
+}
+.img-clear {
+    background: white;
+    height: 48px;
+}
+
 
 .img-download {
     margin-left: 75%;

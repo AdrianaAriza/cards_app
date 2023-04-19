@@ -129,7 +129,7 @@ resetButton.addEventListener('click', () => {
     })
   }).then(response => {
     if (response.status !== 200) {
-      throw new Error('Invalid email. Please try again.');
+      alert('Invalid information. Please try again.');
     }
     return response.json();
   })

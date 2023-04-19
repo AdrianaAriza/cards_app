@@ -17,7 +17,7 @@
             <div class="buttons-container" style="display:flex; justify-content: flex-end; align-items: center;">
                 <button class="button-admin-console"><img src="images/admin-console.png" id="admin-console"
                         class="img-admin-console"></button>
-                <button class="button-search"><img src="images/search_img.png" id="card-search"
+                <button class="button-search"><img src="images/search.png" id="card-search"
                         class="img-search"></button>
                 <button class="button-signout"><img src="images/signout_img.png" id="sign-out"
                         class="img-signout"></button>
@@ -27,11 +27,11 @@
         <div class="img-upload text-center"><img src="images/choose_img.png" id="image"></div>
         <div class="text-center mt-3 pl-3"><input type="file" id="file" name="file" accept="image/*"></div>
         <div class="text-center mt-5"><img src="images/upload_img.png" type="submit" value="Upload"
-                onclick="uploadAndTranslate()"></div>
+                onclick="uploadAndRecognition()"></div>
 
         <div class="mt-5" style="display:none;" id="form">
             <div class="container-fluid text-center mt-3">
-                <h5>Translated Text:</h5>
+                <h5>Card Information:</h5>
                 <div id="entities">
                 </div>
                 <div class="row mt-1 row-margin">
@@ -75,9 +75,10 @@
                     </div>
                 </div>
 
-                <div class="text-center mt-4 mb-3 ml-5"><button type="button"><img src="images/save_img.png"
-                            class="img-save" onclick="saveJSON()"></button></div>
+
             </div>
+            <div class="text-center mt-5 mb-5"><img src="images/save_img.png" class="img-save" onclick="saveJSON()"></div>
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"

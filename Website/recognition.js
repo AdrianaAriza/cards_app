@@ -61,14 +61,15 @@ function updateImage(image) {
     let imageElem = document.getElementById("image");
     imageElem.src = image["fileUrl"];
     imageElem.alt = image["fileId"];
+    imageElem.height = 400;
 
     return image;
 }
 
-function translateImage(image) {
+function recognitionImage(image) {
     // make server call to translate image
     // and return the server upload promise
-    return fetch(serverUrl + "/images/" + image["fileId"] + "/translate-text", {
+    return fetch(serverUrl + "/images/" + image["fileId"] + "/recognition", {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -85,32 +86,38 @@ function translateImage(image) {
     })
 }
 
+let phoneId = document.getElementById("tp_id");
+let nameId = document.getElementById("name_id");
+let emailId = document.getElementById("email_id");
+let urlId = document.getElementById("website_id");
+let addressId = document.getElementById("company_address_id");
+
 function annotateImage(entities) {
+    phoneId.innerText = "(click to edit)"
+    nameId.innerText = "(click to edit)"
+    emailId.innerText = "(click to edit)"
+    urlId.innerText = "(click to edit)"
+    addressId.innerText = "(click to edit)"
     document.getElementById("form").style.display = "block"
     for (let i = 0; i < entities.length; i++) {
         if (entities[i]["entity"] == "PHONE_OR_FAX") {
-            let phoneId = document.getElementById("tp_id");
             phoneId.innerText = entities[i]["text"];
         } else if (entities[i]["entity"] == "NAME") {
-            let nameId = document.getElementById("name_id");
             nameId.innerText = entities[i]["text"];
         } else if (entities[i]["entity"] == "EMAIL") {
-            let emailId = document.getElementById("email_id");
             emailId.innerText = entities[i]["text"];
         } else if (entities[i]["entity"] == "URL") {
-            const urlId = document.getElementById("website_id");
             urlId.innerText = entities[i]["text"];
         } else if (entities[i]["entity"] == "ADDRESS") {
-            let addressId = document.getElementById("company_address_id");
             addressId.innerText = entities[i]["text"];
         }
     }
 }
 
-function uploadAndTranslate() {
+function uploadAndRecognition() {
     uploadImage()
         .then(image => updateImage(image))
-        .then(image => translateImage(image))
+        .then(image => recognitionImage(image))
         .then(entities => {
             annotateImage(entities)
         })

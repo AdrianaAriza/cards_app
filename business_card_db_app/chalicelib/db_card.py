@@ -81,19 +81,19 @@ class DynamoDBCard(CardDB):
 
     def delete_item(self, card_id, user):
         item = self.get_item(card_id)
-        if item['email_owner'] == user:
-            try:
-                self._table.delete_item(
-                    Key={
-                        'card_id': card_id,
-                    }
-                )
-                return Response(status_code=200, body="Successfully deleted")
 
-            except Exception as e:
-                return Response(status_code=502, body=f"External error:  {str(e)}")
+        try:
+            self._table.delete_item(
+                Key={
+                    'card_id': card_id,
+                }
+            )
+            return Response(status_code=200, body="Successfully deleted")
 
-        return Response(status_code=401, body="Unauthorized operation, you are not the owner of this card")
+        except Exception as e:
+            return Response(status_code=502, body=f"External error:  {str(e)}")
+
+        # return Response(status_code=401, body="Unauthorized operation, you are not the owner of this card")
 
     def update_item(self, card_id, user, name=None, telephone_number=None, email=None, company_website=None, company_address=None):
         item = self.get_item(card_id)

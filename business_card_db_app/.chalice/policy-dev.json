@@ -10,7 +10,6 @@
                 "s3:*",
                 "comprehend:*",
                 "rekognition:*",
-                "translate:*",
                 "dynamodb:PutItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:UpdateItem",

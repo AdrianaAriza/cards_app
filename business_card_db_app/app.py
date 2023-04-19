@@ -4,7 +4,7 @@ from chalicelib.utils import get_table_name, get_app_db, get_authorized_username
 from chalicelib.auth import jwt_auth
 from chalicelib import storage_service
 from chalicelib import recognition_service
-from chalicelib import m_comprehend_service
+from chalicelib import comprehend_service
 import boto3
 import json
 import base64
@@ -13,8 +13,8 @@ app = Chalice(app_name='business_card_db_app')
 storage_location = 'cards-db-bucket'
 storage_service = storage_service.StorageService(storage_location)
 recognition_service = recognition_service.RecognitionService(storage_service)
-m_comprehend_service = m_comprehend_service.McomprehendService()
-
+m_comprehend_service = comprehend_service.McomprehendService()
+comprehend_service = comprehend_service.ComprehendService()
 
 @app.route('/')
 def index():
@@ -151,8 +151,8 @@ def upload_image():
         return Response(status_code=500, body="An error occurred uploading the image, try a different image" + e)
 
 
-@app.route('/images/{image_id}/translate-text', methods = ['POST'], cors = True)
-def translate_image_text(image_id):
+@app.route('/images/{image_id}/recognition', methods = ['POST'], cors = True)
+def recognition(image_id):
     """detects then translates text in the specified image"""
     request_data = json.loads(app.current_request.raw_body)
     try:
@@ -160,11 +160,19 @@ def translate_image_text(image_id):
         entity_lines = []
         for line in text_lines:
             entity_line = m_comprehend_service.detect_entities(line['text'])
-            entity_lines.append({
-                'text': line['text'],
-                'entity': entity_line[0]['Type']
-            })
+            if entity_line:
+                entity_lines.append({
+                    'text': line['text'],
+                    'entity': entity_line[0]['Type']
+                })
+            else:
+                entity_line = comprehend_service.detect_entities(line['text'])
+                if entity_line:
+                    entity_lines.append({
+                        'text': line['text'],
+                        'entity': entity_line[0]['Type']
+                    })
 
         return entity_lines
     except Exception as e:
-        return Response(status_code=500, body="An error occurred translating the image, try a different image" + e)
+        return Response(status_code=500, body="An error occurred translating the image, try a different image")
